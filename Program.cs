@@ -85,40 +85,58 @@ class Band
     }
 }
 
+static class Title
+{
+    static public void PrintTitle(string title)
+    {
+        int length = title.Length;
+        string symbols = string.Empty.PadLeft(length, '*');
+
+        System.Console.WriteLine(symbols);
+        System.Console.WriteLine(title);
+        System.Console.WriteLine(symbols);
+        System.Console.WriteLine();
+    }
+}
+
 class RegisterBand : MenuOption
 {
+    readonly string OptionName = "Registrar Banda";
     public override void Execute()
     {
         Console.Clear();
-        Console.WriteLine("Registro de banda");
+        Title.PrintTitle(OptionName);
         Console.Write("Digite o nome da Banda: ");
         string bandName = Console.ReadLine()!;
         
-        if (bandName == "")
+        if (ListBand.AddBand(bandName))
         {
-            return;
+            System.Console.WriteLine($"A banda {bandName} foi registrada com sucesso!");
+        } else
+        {
+            System.Console.WriteLine("Erro ao salvar");
         }
         
-        System.Console.WriteLine($"A banda {bandName} foi registrada com sucesso!");
-        ListBand.AddBand(new Band(bandName));
         Thread.Sleep(2000);
         Console.Clear();
     }
 
     public override string ToString()
     {
-        return "Registrar Banda";
+        return OptionName;
     }
 }
 
 class ListBand : MenuOption
 {
     static List<Band> Bands = new();
+    readonly string OptionName = "Listar Bandas";
     public override void Execute()
     {
         do
         {
             Console.Clear();
+            Title.PrintTitle(OptionName);
             foreach (var item in Bands)
             {
                 System.Console.WriteLine(item);
@@ -127,45 +145,53 @@ class ListBand : MenuOption
         Console.Clear();
     }
 
-    static public void AddBand(Band band)
+    static public bool AddBand(string band)
     {
-        Bands.Add(band);
+        if (band == string.Empty)
+        {
+            return false;
+        }
+        Bands.Add(new Band(band));
+        return true;
     }
 
     public override string ToString()
     {
-        return "Listar Bandas";
+        return OptionName;
     }
 }
 
 class EvaluateBand : MenuOption
 {
+    readonly string OptionName = "Avaliar Banda";
     public override void Execute()
     {
-        throw new NotImplementedException();
+        Title.PrintTitle(OptionName);
     }
 
     public override string ToString()
     {
-        return "Avaliar Banda";
+        return OptionName;
     }
 }
 
 class ShowBandGrade : MenuOption
 {
+    readonly string OptionName = "Exibir Média da Banda";
     public override void Execute()
     {
-        throw new NotImplementedException();
+        Title.PrintTitle(OptionName);
     }
 
     public override string ToString()
     {
-        return "Exibir Média da Banda";
+        return OptionName;
     }
 }
 
 class ExitOption : MenuOption
 {
+    readonly string OptionName = "Sair";
     public override void Execute()
     {
         Console.Clear();
@@ -175,6 +201,6 @@ class ExitOption : MenuOption
 
     public override string ToString()
     {
-        return "Sair";
+        return OptionName;
     }
 }
