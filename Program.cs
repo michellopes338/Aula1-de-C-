@@ -179,13 +179,21 @@ class EvaluateBand : MenuOption
 
         for (int i = 0; i < ListBand.Bands.Count; i++)
         {
-            System.Console.WriteLine($"{i} - {ListBand.Bands[i]}");
+            System.Console.WriteLine($"[{i}] - {ListBand.Bands[i]}");
         }
 
         string requiredBand = Console.ReadLine()!;
         bool canParse = int.TryParse(requiredBand, out int requiredBandNumeric);
 
         if (canParse == false)
+        {
+            System.Console.WriteLine("Opção Inválida");
+            Thread.Sleep(1000);
+            Console.Clear();
+            return;
+        }
+
+        if (requiredBandNumeric < 0 || requiredBandNumeric > ListBand.Bands.Count)
         {
             System.Console.WriteLine("Opção Inválida");
             Thread.Sleep(1000);
@@ -232,7 +240,43 @@ class ShowBandGrade : MenuOption
     readonly string OptionName = "Exibir Média da Banda";
     public override void Execute()
     {
+        Console.Clear();
         Title.PrintTitle(OptionName);
+        System.Console.WriteLine("Qual banda você ver a média? ");
+
+        for (int i = 0; i < ListBand.Bands.Count; i++)
+        {
+            System.Console.WriteLine($"[{i}] - {ListBand.Bands[i]}");
+        }
+
+        string requiredBand = Console.ReadLine()!;
+        bool canParse = int.TryParse(requiredBand, out int requiredBandNumeric);
+
+        if (canParse == false)
+        {
+            System.Console.WriteLine("Opção Inválida");
+            Thread.Sleep(1000);
+            Console.Clear();
+            return;
+        }
+
+        if (requiredBandNumeric < 0 || requiredBandNumeric > ListBand.Bands.Count)
+        {
+            System.Console.WriteLine("Opção Inválida");
+            Thread.Sleep(1000);
+            Console.Clear();
+            return;
+        }
+
+        Band band = ListBand.Bands[requiredBandNumeric];
+
+        int sumGrades = band.grades.Sum();
+        int avgGrade = sumGrades / band.grades.Count;
+
+        System.Console.WriteLine($"\nA banda {band} tem a média {avgGrade}");
+        Console.ReadLine();
+        
+        Console.Clear();
     }
 
     public override string ToString()
