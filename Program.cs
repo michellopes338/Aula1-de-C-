@@ -270,8 +270,7 @@ class ShowBandGrade : MenuOption
 
         Band band = ListBand.Bands[requiredBandNumeric];
 
-        int sumGrades = band.grades.Sum();
-        int avgGrade = sumGrades / band.grades.Count;
+        double avgGrade = band.grades.Average();
 
         System.Console.WriteLine($"\nA banda {band} tem a média {avgGrade}");
         Console.ReadLine();
