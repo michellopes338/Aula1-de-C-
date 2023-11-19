@@ -26,16 +26,19 @@ int DisplayMenu(List<MenuOption> options)
     }
     System.Console.Write("\nDigite sua opção: ");
     string chosenOption = Console.ReadLine()!;
-    if (chosenOption == "")
+
+    bool canParse = int.TryParse(chosenOption, out int chosenOptionNumeric);
+
+    if (canParse == false)
     {
-        System.Console.WriteLine("Você precisa inserir um valor");
+        Console.Clear();
+        System.Console.WriteLine("Você precisa inserir um valor valido");
         return DisplayMenu(options);
     }
 
-    int chosenOptionNumeric = int.Parse(chosenOption);
-
     if (chosenOptionNumeric > options.Count || chosenOptionNumeric < 0)
     {
+        Console.Clear();
         System.Console.WriteLine("Essa não é uma opção valida");
         return DisplayMenu(options);
     }
@@ -49,12 +52,10 @@ void HandleMenu(List<MenuOption> options)
     {
         ShowLogo();
         int chosenOptionNumeric = DisplayMenu(options);
-        System.Console.WriteLine("Você escolheu a opção '{0} - {1}'", chosenOptionNumeric, options[chosenOptionNumeric]);
         options[chosenOptionNumeric].Execute();
     }
 }
 
-ShowLogo();
 List<MenuOption> menuOptions = new()
 {
     new RegisterBand(), new ListBand(), new EvaluateBand(), new ShowBandGrade(), new ExitOption()
@@ -74,6 +75,7 @@ abstract class MenuOption
 class Band
 {
     public string Name;
+    public List<int> grades = new();
     public Band(string inputName)
     {
         Name = inputName;
@@ -82,6 +84,11 @@ class Band
     public override string ToString()
     {
         return Name;
+    }
+
+    public void AddGrade(int newGrade)
+    {
+        grades.Add(newGrade);
     }
 }
 
@@ -116,8 +123,7 @@ class RegisterBand : MenuOption
         {
             System.Console.WriteLine("Erro ao salvar");
         }
-        
-        Thread.Sleep(2000);
+        Thread.Sleep(800);
         Console.Clear();
     }
 
@@ -129,7 +135,7 @@ class RegisterBand : MenuOption
 
 class ListBand : MenuOption
 {
-    static List<Band> Bands = new();
+    public static List<Band> Bands = new();
     readonly string OptionName = "Listar Bandas";
     public override void Execute()
     {
@@ -166,7 +172,53 @@ class EvaluateBand : MenuOption
     readonly string OptionName = "Avaliar Banda";
     public override void Execute()
     {
+        Console.Clear();
         Title.PrintTitle(OptionName);
+        
+        System.Console.WriteLine("Qual banda você quer avaliar? ");
+
+        for (int i = 0; i < ListBand.Bands.Count; i++)
+        {
+            System.Console.WriteLine($"{i} - {ListBand.Bands[i]}");
+        }
+
+        string requiredBand = Console.ReadLine()!;
+        bool canParse = int.TryParse(requiredBand, out int requiredBandNumeric);
+
+        if (canParse == false)
+        {
+            System.Console.WriteLine("Opção Inválida");
+            Thread.Sleep(1000);
+            Console.Clear();
+            return;
+        }
+
+        Band band = ListBand.Bands[requiredBandNumeric];
+
+        Console.Clear();
+        System.Console.Write($"Insira uma nota para a banda {band}: ");
+        string grade = Console.ReadLine()!;
+
+        bool canParseGrade = int.TryParse(grade, out int gradeNumeric);
+        if (canParseGrade == false)
+        {
+            System.Console.WriteLine("Opção Inválida");
+            Thread.Sleep(1000);
+            Console.Clear();
+            return;
+        }
+
+        if (gradeNumeric < 0 || gradeNumeric > 10)
+        {
+            System.Console.WriteLine("Opção Inválida");
+            Thread.Sleep(1000);
+            return;
+        }
+
+        band.AddGrade(gradeNumeric);
+        System.Console.WriteLine("Nota adicionada com sucesso");
+        Thread.Sleep(1000);
+        Console.Clear();
     }
 
     public override string ToString()
