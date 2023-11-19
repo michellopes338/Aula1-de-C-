@@ -11,7 +11,7 @@ string appName = @"
 ";
 string helloMessage = "Seja Bem Vindo!";
 
-void ShowMessage()
+void ShowLogo()
 {
     Console.WriteLine(appName);
     Console.WriteLine(helloMessage);
@@ -47,13 +47,14 @@ void HandleMenu(List<MenuOption> options)
 {
     while (true)
     {
+        ShowLogo();
         int chosenOptionNumeric = DisplayMenu(options);
         System.Console.WriteLine("Você escolheu a opção '{0} - {1}'", chosenOptionNumeric, options[chosenOptionNumeric]);
         options[chosenOptionNumeric].Execute();
     }
 }
 
-ShowMessage();
+ShowLogo();
 List<MenuOption> menuOptions = new()
 {
     new RegisterBand(), new ListBand(), new EvaluateBand(), new ShowBandGrade(), new ExitOption()
